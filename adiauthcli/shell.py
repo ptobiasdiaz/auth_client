@@ -4,7 +4,10 @@ import cmd
 import getpass
 import logging
 
-from adiauthcli.client import Client
+try:
+    from adiauthcli.client import Client
+except ImportError:
+    from .client import Client
 
 __version__ = '1.0'
 

@@ -12,8 +12,13 @@ from typing import Optional
 
 import requests
 
-from adiauthcli.errors import Unauthorized, AlreadyLogged, UserAlreadyExists, UserNotExists
-from adiauthcli import DEFAULT_ENCODING, USER, HASH_PASS, TOKEN, ADMIN, ADMIN_TOKEN, USER_TOKEN
+try:
+    from adiauthcli.errors import Unauthorized, AlreadyLogged, UserAlreadyExists, UserNotExists
+    from adiauthcli import DEFAULT_ENCODING, USER, HASH_PASS, TOKEN, ADMIN, ADMIN_TOKEN, USER_TOKEN
+except ImportError:
+    from .errors import Unauthorized, AlreadyLogged, UserAlreadyExists, UserNotExists
+    from . import DEFAULT_ENCODING, USER, HASH_PASS, TOKEN, ADMIN, ADMIN_TOKEN, USER_TOKEN
+
 
 CONTENT_JSON = {'Content-Type': 'application/json'}
 

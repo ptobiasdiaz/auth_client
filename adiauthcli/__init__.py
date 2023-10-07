@@ -23,8 +23,12 @@ USER_TOKEN_SIZE = 30
 HASH_PASS = 'hash-pass'
 DEFAULT_AUTH_DB = 'users.json'
 
-from adiauthcli.shell import Shell
-from adiauthcli.client import Client
+try:
+    from adiauthcli.shell import Shell
+    from adiauthcli.client import Client
+except ImportError:
+    from .shell import Shell
+    from .client import Client
 
 
 def connect(url: str, user: str, password: str) -> Client:
