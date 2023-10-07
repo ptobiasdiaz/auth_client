@@ -196,6 +196,27 @@ class Shell(cmd.Cmd):
             logging.error(f'Cannot logout: {error}')
             return self.stop_on_error
 
+    def do_show_token(self, line):
+        '''Show current auth token (user only)'''
+        if not self.client:
+            logging.error('Not connected to an Auth service, connect first')
+            return self.stop_on_error
+        if not self.client.logged:
+            logging.error('Token is only available when logged in')
+            return self.stop_on_error
+        self.output(self.client.auth_token)
+
+    def do_refresh_auth_token(self, line):
+        '''Revoke current token and get new one'''
+        '''Show current auth token (user only)'''
+        if not self.client:
+            logging.error('Not connected to an Auth service, connect first')
+            return self.stop_on_error
+        if not self.client.logged:
+            logging.error('Refresh token requires login')
+            return self.stop_on_error
+        self.client.refresh_token()
+
     def do_EOF(self, line):
         '''Disconnect and quit'''
         return self.do_quit(line)

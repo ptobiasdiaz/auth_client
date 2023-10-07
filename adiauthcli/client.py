@@ -84,6 +84,11 @@ class Client:
         result = json.loads(result.content.decode(DEFAULT_ENCODING))
         return result[TOKEN]
 
+    @property
+    def auth_token(self) -> str:
+        '''Get current token'''
+        return self._token_ if self.logged else None
+
     def logout(self) -> None:
         '''Try to logout'''
         if not self.logged:
