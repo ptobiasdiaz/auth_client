@@ -13,6 +13,16 @@ UNAUTHORIZED = 4
 
 ## Custom exceptions
 
+class ServiceError(Exception):
+    '''Generic service error'''
+    def __init__(self, url='unknown', reason='unknown'):
+        self._url_ = url
+        self._reason_ = reason
+
+    def __str__(self):
+        return f'Service error at "{self._url_}": {self._reason_}'
+
+
 class Unauthorized(Exception):
     '''Authorization error'''
     def __init__(self, user='unknown', reason='unknown'):

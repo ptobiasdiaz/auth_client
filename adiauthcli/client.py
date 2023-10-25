@@ -12,7 +12,7 @@ from typing import Optional
 
 import requests
 
-from adiauthcli.errors import Unauthorized, AlreadyLogged, UserAlreadyExists, UserNotExists
+from adiauthcli.errors import ServiceError, Unauthorized, AlreadyLogged, UserAlreadyExists, UserNotExists
 from adiauthcli import DEFAULT_ENCODING, USER, HASH_PASS, TOKEN, ADMIN, ADMIN_TOKEN, USER_TOKEN
 
 CONTENT_JSON = {'Content-Type': 'application/json'}
@@ -20,8 +20,11 @@ CONTENT_JSON = {'Content-Type': 'application/json'}
 
 class Client:
     '''Client implementation'''
-    def __init__(self, api_url: str, admin_token: Optional[str]=None):
+    def __init__(self, api_url: str, admin_token: Optional[str]=None, check_service: bool=True):
         self._url_ = api_url[:-1] if api_url.endswith('/') else api_url
+        if check_service:
+            if not self.service_up:
+                raise ServiceError(api_url, 'service seems down')
         self._admin_token_ = admin_token
 
         self._user_ = None
@@ -59,6 +62,15 @@ class Client:
         if not self.logged:
             return {}
         return {USER_TOKEN: self._token_}
+
+    @property
+    def service_up(self) -> bool:
+        '''Return is service is running or not'''
+        try:
+            result = requests.get(f'{self._url_}/v1/status', verify=False)
+            return result.status_code == 200
+        except Exception as error:
+            return False
 
     def login(self, user: str, password: str) -> None:
         '''Try to login'''
